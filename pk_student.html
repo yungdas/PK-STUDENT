@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>pk STUDENT — ติดตามการบ้านกับเพื่อน</title>
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="pk STUDENT">
+
+<!-- PWA Web App Manifest -->
+<link rel="manifest" href='data:application/manifest+json,{"name":"pk STUDENT","short_name":"pkSTUDENT","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#6366f1","icons":[{"src":"https://placehold.co/192x192/6366f1/ffffff?text=pk","sizes":"192x192","type":"image/png"},{"src":"https://placehold.co/512x512/6366f1/ffffff?text=pkSTUDENT","sizes":"512x512","type":"image/png"}]}'>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+  :root{
+    --bg-grad-1: #eef2ff;
+    --bg-grad-2: #f0fdf4;
+    --bg-grad-3: #fefce8;
+    --card: rgba(255, 255, 255, 0.85);
+    --card-solid: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: rgba(226, 232, 240, 0.8);
+    --border-hover: #cbd5e1;
+    
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --primary-light: rgba(99, 102, 241, 0.12);
+    --accent: #f59e0b;
+    --hl: #fde047;
+    
+    --high: #ef4444;
+    --mid: #f59e0b;
+    --low: #10b981;
+    
+    --ink: #1e1b4b;
+    --on-ink: #ffffff;
+    --rule: rgba(99, 102, 241, 0.08);
+    
+    --glass-bg: rgba(255, 255, 255, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 20px 35px -10px rgba(15, 23, 42, 0.12);
+    
+    --r: 16px;
+    --r-sm: 12px;
+    --r-lg: 24px;
+    --bottom-nav-height: 68px;
+  }
+
+  [data-theme="dark"]{
+    --bg-grad-1: #0f172a;
+    --bg-grad-2: #1e1b4b;
+    --bg-grad-3: #022c22;
+    --card: rgba(30, 41, 59, 0.82);
+    --card-solid: #1e293b;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: rgba(51, 65, 85, 0.8);
+    --border-hover: #475569;
+    
+    --primary: #818cf8;
+    --primary-hover: #6366f1;
+    --primary-light: rgba(129, 140, 248, 0.18);
+    
+    --high: #f87171;
+    --mid: #fbbf24;
+    --low: #34d399;
+    
+    --ink: #312e81;
+    --on-ink: #ffffff;
+    --rule: rgba(129, 140, 248, 0.1);
+    
+    --glass-bg: rgba(30, 41, 59, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+    --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color: transparent;}
+  
+  body{
+    font-family:'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: radial-gradient(circle at 0% 0%, var(--bg-grad-1) 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, var(--bg-grad-2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 100%, var(--bg-grad-3) 0%, transparent 50%),
+                var(--bg-grad-1);
+    background-attachment: fixed;
+    color:var(--text);
+    min-height:100vh;
+    line-height:1.6;
+    transition:background 0.4s ease, color 0.4s ease;
+    padding-bottom: calc(var(--bottom-nav-height) + 36px);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button{font-family:inherit;cursor:pointer;border:none;transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1); touch-action: manipulation;}
+  :focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+  
+  input,select,textarea{
+    font-family:inherit;
+    font-size:16px;
+    width:100%;
+    padding:14px 16px;
+    border:1.5px solid var(--border);
+    border-radius:var(--r-sm);
+    background:var(--card-solid);
+    color:var(--text);
+    outline:none;
+    transition:all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    min-height: 48px;
+  }
+  input:focus,select:focus,textarea:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px var(--primary-light);
+  }
+  textarea{resize:vertical;min-height:100px}
+  
+  .hidden{display:none!important}
+  .muted{color:var(--muted)}
+  .b{font-weight:600}
+  .grow{flex:1;min-width:0}
+  .container{max-width:860px;margin:0 auto;padding:16px 16px}
+
+  /* BUTTONS & TOUCH TARGETS */
+  .btn{
+    padding:14px 22px;
+    border-radius:var(--r-sm);
+    font-weight:600;
+    font-size:15.5px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    box-shadow:var(--shadow-sm);
+    letter-spacing: 0.01em;
+    min-height: 48px;
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+  .btn:active{transform:translateY(1px);scale:0.98}
+  
+  .btn-primary{
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    color:#ffffff;
+  }
+  [data-theme="dark"] .btn-primary{
+    background: linear-gradient(135deg, var(--primary), #6366f1);
+    color:#0f172a;
+    font-weight:700;
+  }
+  
+  .btn-ghost{
+    background:var(--glass-bg);
+    color:var(--text);
+    border:1.5px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+  .btn-ghost:hover{
+    border-color:var(--primary);
+    color:var(--primary);
+    background:var(--primary-light);
+  }
+  
+  .btn-danger{
+    background:rgba(239, 68, 68, 0.08);
+    color:var(--high);
+    border:1.5px solid rgba(239, 68, 68, 0.3);
+  }
+  .btn-danger:hover{ background:var(--high); color:#fff; }
+  
+  .btn-line{background:#06c755;color:#fff;font-weight:600}
+  .btn-line:hover{background:#05b34c;box-shadow:0 4px 12px rgba(6, 199, 85, 0.3)}
+  .btn-block{width:100%}
+  
+  .icon-btn{
+    width:46px;
+    height:46px;
+    border-radius:14px;
+    background:var(--glass-bg);
+    border:1.5px solid var(--border);
+    font-size:19px;
+    color:var(--text);
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-sm);
+  }
+  .icon-btn:hover{
+    border-color:var(--primary);
+    color:var(--primary);
+    transform:translateY(-2px);
+  }
+  
+  .mini{
+    background:transparent;
+    font-size:16px;
+    min-width:44px;
+    min-height:44px;
+    display:inline-grid;
+    place-items:center;
+    border-radius:10px;
+    opacity:.85;
+    color:var(--text);
+  }
+  .mini:hover,.mini:active{
+    opacity:1;
+    background:var(--primary-light);
+    color:var(--primary);
+  }
+
+  /* PROFILE SCREEN */
+  .center{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding-top:48px;
+    max-width:680px;
+  }
+  .top-right{position:absolute;top:16px;right:16px;z-index:5}
+  
+  .brand{
+    font-size:48px;
+    font-weight:800;
+    letter-spacing:-0.03em;
+    line-height:1.15;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom:10px;
+  }
+  [data-theme="dark"] .brand{
+    background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .profile-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:14px;
+    margin:28px 0;
+    width:100%;
+  }
+  
+  .profile-card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    background:var(--glass-bg);
+    border:1.5px solid var(--glass-border);
+    border-radius:var(--r);
+    padding:20px 14px;
+    color:var(--text);
+    box-shadow:var(--glass-shadow);
+    backdrop-filter: blur(12px);
+  }
+  .profile-card:hover, .profile-card:active{
+    border-color:var(--primary);
+    transform:translateY(-3px);
+  }
+  .profile-card.add{
+    border:2px dashed var(--muted);
+    background:rgba(255, 255, 255, 0.15);
+    justify-content:center;
+  }
+  
+  .pname{font-weight:700;font-size:16px;word-break:break-word;margin-top:6px}
+  .psub{font-size:12.5px;color:var(--muted);margin-top:2px;font-weight:500}
+  
+  .avatar{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:var(--card-solid);
+    border:2.5px solid var(--border);
+    display:grid;
+    place-items:center;
+    font-size:28px;
+    margin:0 0 4px;
+    box-shadow: var(--shadow-sm);
+  }
+  .avatar.sm{width:44px;height:44px;font-size:22px;margin:0;flex-shrink:0;border-width:2px}
+
+  /* HEADER */
+  .header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+    background:var(--glass-bg);
+    padding:14px 16px;
+    border-radius:var(--r);
+    border:1.5px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    box-shadow:var(--glass-shadow);
+  }
+  .user{display:flex;align-items:center;gap:12px;min-width:0}
+  .user h2{font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .user small{color:var(--muted);font-size:12.5px;font-weight:500}
+  .actions{display:flex;gap:8px}
+
+  /* PROGRESS CARD */
+  .progress-card{
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #6366f1 100%);
+    color:#ffffff;
+    border-radius:var(--r-lg);
+    padding:22px 20px;
+    margin-bottom:16px;
+    box-shadow: 0 15px 30px -10px rgba(67, 56, 202, 0.4);
+  }
+  .progress-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;}
+  .pct{font-size:46px;font-weight:800;line-height:1;letter-spacing:-0.02em}
+  .bar{height:12px;background:rgba(255,255,255,0.22);border-radius:8px;overflow:hidden;margin:14px 0 10px;}
+  .bar-fill{
+    height:100%;
+    width:0;
+    background: linear-gradient(90deg, #fde047 0%, #fbbf24 100%);
+    border-radius:8px;
+    transition:width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* STATS CARDS */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+  .stat{
+    padding:14px 8px;
+    text-align:center;
+    background:var(--glass-bg);
+    border:1.5px solid var(--glass-border);
+    border-radius:var(--r);
+    backdrop-filter: blur(12px);
+    box-shadow:var(--shadow-sm);
+  }
+  .stat .num{font-size:26px;font-weight:800;line-height:1.2}
+  .stat .lbl{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
+
+  /* CARDS GENERAL */
+  .card{
+    background:var(--glass-bg);
+    border:1.5px solid var(--glass-border);
+    border-radius:var(--r);
+    padding:18px 16px;
+    margin-bottom:14px;
+    backdrop-filter: blur(12px);
+    box-shadow:var(--glass-shadow);
+  }
+  
+  .quote{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    border-left:5px solid var(--accent);
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, transparent 100%);
+  }
+  .quote-text{flex:1;font-size:14px;font-weight:500;font-style:italic}
+  
+  .due-alert{
+    border-left:5px solid var(--high);
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.08) 0%, transparent 100%);
+  }
+  .due-row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 0;
+    border-bottom:1px dashed var(--border);
+    font-size:13.5px;
+  }
+  .due-row:last-child{border-bottom:none}
+  .due-row span:first-child{min-width:0;word-break:break-word;font-weight:500}
+  .due-tag{flex-shrink:0;font-weight:700;font-size:12px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.5)}
+
+  .announce-item{
+    padding:12px 14px;
+    background:var(--card-solid);
+    border-left:4px solid var(--primary);
+    border-radius:var(--r-sm);
+    margin-top:10px;
+    font-size:13.5px;
+    white-space:pre-wrap;
+    word-break:break-word;
+    box-shadow:var(--shadow-sm);
+  }
+  .announce-item small{display:block;color:var(--muted);margin-top:4px;font-weight:500}
+  
+  .section-title{
+    font-weight:700;
+    font-size:19px;
+    margin:24px 0 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  /* FILTERS & CHIPS */
+  .filters{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+  .filter-row{display:flex;gap:10px}
+  .filter-row select{max-width:160px}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scroll-behavior: smooth;-webkit-overflow-scrolling: touch;}
+  .chips::-webkit-scrollbar{display:none}
+  
+  .chip{
+    padding:8px 18px;
+    border-radius:24px;
+    background:var(--glass-bg);
+    border:1.5px solid var(--border);
+    color:var(--muted);
+    white-space:nowrap;
+    font-size:13.5px;
+    font-weight:600;
+    backdrop-filter: blur(8px);
+    min-height: 40px;
+    display:inline-flex;
+    align-items:center;
+  }
+  .chip.active{
+    background:var(--primary);
+    color:#ffffff;
+    border-color:var(--primary);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+  [data-theme="dark"] .chip.active{color:#0f172a}
+
+  /* TASKS LIST */
+  .task{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--glass-bg);
+    border:1.5px solid var(--glass-border);
+    border-left:6px solid var(--low);
+    border-radius:var(--r);
+    padding:16px;
+    margin-bottom:12px;
+    backdrop-filter: blur(12px);
+    box-shadow:var(--shadow-sm);
+  }
+  .task.p-high{border-left-color:var(--high)}
+  .task.p-medium{border-left-color:var(--mid)}
+  .task.done{opacity:.55}
+  .task.done .task-title{text-decoration:line-through;color:var(--muted)}
+  .task.pop{animation:pop 0.35s ease}
+  @keyframes pop{40%{transform:scale(1.02)}}
+  
+  .check{
+    flex-shrink:0;
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    border:2px solid var(--muted);
+    background:var(--card-solid);
+    color:transparent;
+    font-weight:800;
+    font-size:18px;
+    margin-top:2px;
+    display:grid;
+    place-items:center;
+  }
+  .check.checked{background:var(--low);border-color:var(--low);color:#fff}
+  
+  .task-body{flex:1;min-width:0}
+  .task-top{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+  
+  .tag{
+    font-size:11.5px;
+    padding:3px 9px;
+    border-radius:16px;
+    font-weight:600;
+    border:1px solid transparent;
+  }
+  .tag.subject{
+    background:var(--primary-light);
+    color:var(--primary);
+  }
+  .tag.high{background:rgba(239, 68, 68, 0.12);color:var(--high)}
+  .tag.medium{background:rgba(245, 158, 11, 0.14);color:var(--mid)}
+  .tag.low{background:rgba(16, 185, 129, 0.14);color:var(--low)}
+  .tag.shared{background:var(--hl);color:#1e1b4b;font-weight:700}
+  
+  .task-title{font-weight:700;font-size:15.5px;word-break:break-word;line-height:1.4}
+  .task-note{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:6px;
+    white-space:pre-wrap;
+    word-break:break-word;
+    background:var(--card-solid);
+    padding:8px 10px;
+    border-radius:var(--r-sm);
+    border:1px solid var(--border);
+  }
+  .task-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 6px 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    text-decoration: none;
+  }
+  .due{font-size:12.5px;color:var(--muted);margin-top:6px;display:inline-block;font-weight:600}
+  .due.overdue{color:var(--high)}
+  .due.today,.due.soon{color:var(--mid)}
+  .task-actions{display:flex;flex-direction:column;gap:4px}
+  .empty{text-align:center;color:var(--muted);padding:36px 16px;line-height:1.8;border:1.5px dashed var(--border);border-radius:var(--r)}
+
+  /* CALENDAR STYLING */
+  .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+  .cal-day-name{font-size:12px;font-weight:700;color:var(--muted);padding-bottom:6px}
+  .cal-cell{
+    min-height:52px;
+    background:var(--card-solid);
+    border:1px solid var(--border);
+    border-radius:var(--r-sm);
+    padding:4px;
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    cursor:pointer;
+    position:relative;
+  }
+  .cal-cell:hover{border-color:var(--primary)}
+  .cal-cell.other-month{opacity:0.3}
+  .cal-cell.today{border:2px solid var(--primary);background:var(--primary-light)}
+  .cal-cell.selected{box-shadow:0 0 0 3px var(--primary)}
+  .cal-dots{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;justify-content:center}
+  .cal-dot{width:6px;height:6px;border-radius:50%}
+  .cal-dot.high{background:var(--high)}
+  .cal-dot.medium{background:var(--mid)}
+  .cal-dot.low{background:var(--low)}
+
+  /* BOTTOM NAVIGATION FOR MOBILE */
+  .bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1.5px solid var(--glass-border);
+    z-index: 90;
+    padding: 6px 8px calc(env(safe-area-inset-bottom, 0px) + 6px);
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -5px 25px rgba(0,0,0,0.06);
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    background: transparent;
+    padding: 6px 10px;
+    border-radius: 12px;
+    gap: 2px;
+    min-width: 52px;
+  }
+  .nav-item .icon { font-size: 19px; }
+  .nav-item.active, .nav-item:active { color: var(--primary); }
+
+  /* FAB BUTTON */
+  .fab{
+    position:fixed;
+    right:20px;
+    bottom: calc(var(--bottom-nav-height) + 16px);
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    font-size:32px;
+    color:#ffffff;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    border:none;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+    z-index:80;
+    display:grid;
+    place-items:center;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .fab:active{transform:scale(0.92)}
+  [data-theme="dark"] .fab{
+    background: linear-gradient(135deg, #818cf8, #6366f1);
+    color:#0f172a;
+  }
+
+  /* MODALS & BOTTOM SHEET */
+  .modal{
+    position:fixed;
+    inset:0;
+    background:rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    z-index:100;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .modal.open{opacity:1;visibility:visible;pointer-events:auto}
+  
+  .modal-box{
+    background:var(--card-solid);
+    width:100%;
+    max-width:520px;
+    border-radius:24px 24px 0 0;
+    border-top:5px solid var(--primary);
+    padding:20px 20px 32px;
+    max-height:88vh;
+    overflow-y:auto;
+    transform:translateY(100%);
+    transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow:var(--shadow-lg);
+    position: relative;
+  }
+  .modal-box::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+    margin: 0 auto 16px;
+  }
+  .modal.open .modal-box{transform:translateY(0)}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .modal-head h3{font-size:19px;font-weight:700}
+  
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  
+  .prio-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .prio-pick button{
+    padding:12px 8px;
+    border-radius:var(--r-sm);
+    background:var(--card-solid);
+    border:1.5px solid var(--border);
+    color:var(--text);
+    font-size:13.5px;
+    font-weight:600;
+    min-height:48px;
+  }
+  .prio-pick button.sel[data-p="high"]{border-color:var(--high);background:rgba(239,68,68,.12);color:var(--high)}
+  .prio-pick button.sel[data-p="medium"]{border-color:var(--mid);background:rgba(245,158,11,.14);color:var(--mid)}
+  .prio-pick button.sel[data-p="low"]{border-color:var(--low);background:rgba(16,185,129,.14);color:var(--low)}
+  
+  .btn-row{display:flex;gap:10px;margin-top:12px}
+  .btn-row .btn{flex:1}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
+  .list-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+  .list-row:last-child{border-bottom:none}
+  .avatar-pick{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  .avatar-pick button{font-size:22px;width:44px;height:44px;border-radius:var(--r-sm);background:var(--bg-grad-1);border:2px solid transparent}
+  .avatar-pick button.sel{border-color:var(--primary)}
+  .mini-bar{height:6px;background:var(--border);border-radius:2px;overflow:hidden;margin:8px 0 4px}
+  .mini-bar div{height:100%;background:var(--low)}
+  .row-form{display:flex;gap:8px}
+
+  /* TOASTS */
+  .toast-box{
+    position:fixed;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:200;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:center;
+    max-width:92vw;
+    pointer-events:none;
+  }
+  .toast{
+    background:var(--ink);
+    color:var(--on-ink);
+    padding:12px 20px;
+    border-radius:var(--r-sm);
+    font-size:13.5px;
+    font-weight:600;
+    border-left:5px solid var(--low);
+    box-shadow:var(--shadow-md);
+    animation:toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .toast.error{border-left-color:var(--high)}
+  .toast.info{border-left-color:var(--primary)}
+  .toast.hide{opacity:0;transform:translateY(-10px)}
+  @keyframes toastIn{from{opacity:0;transform:translateY(-10px)}}
+
+  /* RESPONSIVE DESKTOP OVERRIDES */
+  @media(min-width:640px){
+    body { padding-bottom: 40px; }
+    .bottom-nav { display: none !important; }
+    .fab { bottom: 28px; right: 28px; }
+    .modal{ align-items:center }
+    .modal-box{ border-radius:24px; transform:scale(0.92); opacity:0; }
+    .modal-box::before { display: none; }
+    .modal.open .modal-box{ transform:scale(1); opacity:1; }
+  }
+  @media(max-width:639px){
+    .bottom-nav { display: flex; }
+    .header .actions { display: none; }
+    .filter-row { flex-direction: column; }
+    .filter-row select { max-width: 100%; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== หน้าเลือกโปรไฟล์ ========== -->
+<section id="profileScreen">
+  <div class="top-right"><button class="icon-btn theme-toggle" data-action="theme" title="สลับธีม">🌙</button></div>
+  <div class="container center">
+    <h1 class="brand">pk STUDENT</h1>
+    <p class="muted">ติดตามการบ้านและงานค้างไปด้วยกันกับเพื่อน ๆ<br>เลือกโปรไฟล์ของคุณ หรือกด "เพิ่มโปรไฟล์" เพื่อเริ่มต้น</p>
+    <div id="profileGrid" class="profile-grid"></div>
+    <button class="btn btn-ghost" data-action="open-admin-login">🔐 เข้าสู่ระบบแอดมิน</button>
+  </div>
+</section>
+
+<!-- ========== หน้าหลักผู้ใช้ ========== -->
+<section id="appScreen" class="hidden">
+  <div class="container">
+    <div class="header">
+      <div class="user">
+        <div class="avatar sm" id="userAvatar"></div>
+        <div class="grow">
+          <h2 id="userGreeting"></h2>
+          <small id="todayText"></small>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn" data-action="share" title="แชร์สรุปไป LINE">💬</button>
+        <button class="icon-btn theme-toggle" data-action="theme" title="สลับธีม">🌙</button>
+        <button class="icon-btn" data-action="logout" title="เปลี่ยนโปรไฟล์">🔄</button>
+      </div>
+    </div>
+
+    <!-- แผงสลับโหมดมุมมอง (รายการงาน / ปฏิทิน) -->
+    <div class="chips" style="margin-bottom: 12px;">
+      <button class="chip active" id="viewTasksBtn" onclick="switchMainView('tasks')">📝 รายการงาน</button>
+      <button class="chip" id="viewCalBtn" onclick="switchMainView('calendar')">📅 ปฏิทินส่งงาน</button>
+    </div>
+
+    <!-- มุมมองปฏิทิน (Calendar View Section) -->
+    <div id="calendarSection" class="card hidden">
+      <div class="cal-header">
+        <button class="btn btn-ghost" onclick="changeCalMonth(-1)">◀ เดือนก่อน</button>
+        <h3 id="calMonthTitle" style="font-size:17px;font-weight:700"></h3>
+        <button class="btn btn-ghost" onclick="changeCalMonth(1)">เดือนถัดไป ▶</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-day-name">อา</div><div class="cal-day-name">จ</div><div class="cal-day-name">อ</div>
+        <div class="cal-day-name">พ</div><div class="cal-day-name">พฤ</div><div class="cal-day-name">ศ</div><div class="cal-day-name">ส</div>
+      </div>
+      <div class="cal-grid" id="calCells"></div>
+      <div id="calDayTaskList" style="margin-top:16px;"></div>
+    </div>
+
+    <!-- มุมมองรายการงาน (Tasks View Section) -->
+    <div id="tasksSection">
+      <div class="progress-card">
+        <div class="progress-top">
+          <div>
+            <div style="opacity:.9;font-size:13.5px;font-weight:500">ความคืบหน้าทั้งหมด</div>
+            <div class="pct" id="pctText">0%</div>
+          </div>
+          <div style="text-align:right;font-size:13.5px;opacity:.95;font-weight:500" id="progressMsg"></div>
+        </div>
+        <div class="bar"><div class="bar-fill" id="progressFill"></div></div>
+        <div style="font-size:12.5px;opacity:.9;font-weight:500" id="progressSub"></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="num" id="statPending" style="color:var(--primary)">0</div><div class="lbl">⏳ งานค้าง</div></div>
+        <div class="stat"><div class="num" id="statOverdue" style="color:var(--high)">0</div><div class="lbl">⚠️ เลยกำหนด</div></div>
+        <div class="stat"><div class="num" id="statUrgent" style="color:var(--mid)">0</div><div class="lbl">🔥 งานด่วน</div></div>
+      </div>
+
+      <div class="card due-alert hidden" id="dueAlert"></div>
+
+      <div class="card quote">
+        <div style="font-size:26px">💡</div>
+        <div class="quote-text" id="quoteText"></div>
+        <button class="mini" data-action="new-quote" title="สุ่มคำคมใหม่">🔀</button>
+      </div>
+
+      <div class="card hidden" id="announceCard">
+        <div class="b">📣 ประกาศจากแอดมิน</div>
+        <div id="announceBox"></div>
+      </div>
+
+      <div class="section-title"><span>📝 รายการงาน</span><span class="muted" style="font-size:13.5px;font-weight:400" id="taskCount"></span></div>
+
+      <div class="filters">
+        <div class="filter-row">
+          <input type="search" id="searchInput" placeholder="🔍 ค้นหางาน วิชา หรือหมายเหตุ...">
+          <select id="subjectFilter"></select>
+        </div>
+        <div class="chips" id="statusChips">
+          <button class="chip active" data-action="status" data-status="all">ทั้งหมด</button>
+          <button class="chip" data-action="status" data-status="pending">⏳ ยังไม่เสร็จ</button>
+          <button class="chip" data-action="status" data-status="done">✅ เสร็จแล้ว</button>
+          <button class="chip" data-action="status" data-status="overdue">⚠️ เลยกำหนด</button>
+        </div>
+      </div>
+
+      <div id="taskList"></div>
+    </div>
+  </div>
+  
+  <button class="fab" data-action="add-task" title="เพิ่มงาน">+</button>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="navTasks" onclick="switchMainView('tasks')">
+      <span class="icon">📝</span><span>งานค้าง</span>
+    </button>
+    <button class="nav-item" id="navCal" onclick="switchMainView('calendar')">
+      <span class="icon">📅</span><span>ปฏิทิน</span>
+    </button>
+    <button class="nav-item" data-action="share">
+      <span class="icon">💬</span><span>แชร์ LINE</span>
+    </button>
+    <button class="nav-item theme-toggle" data-action="theme">
+      <span class="icon">🌙</span><span>โหมด</span>
+    </button>
+    <button class="nav-item" data-action="logout">
+      <span class="icon">🔄</span><span>โปรไฟล์</span>
+    </button>
+  </nav>
+</section>
+
+<!-- ========== หน้าแอดมิน ========== -->
+<section id="adminScreen" class="hidden">
+  <div class="container">
+    <div class="header">
+      <div class="user">
+        <div class="avatar sm">🛡️</div>
+        <div><h2>แผงควบคุมแอดมิน</h2><small>จัดการสมาชิก งาน และประกาศ</small></div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn theme-toggle" data-action="theme">🌙</button>
+        <button class="icon-btn" data-action="exit-admin" title="ออกจากระบบแอดมิน">🚪</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="chip active" data-action="tab" data-tab="members">👥 สมาชิก</button>
+      <button class="chip" data-action="tab" data-tab="shared">📢 ประกาศงาน</button>
+      <button class="chip" data-action="tab" data-tab="news">📣 ประกาศข่าว</button>
+      <button class="chip" data-action="tab" data-tab="settings">⚙️ ตั้งค่า</button>
+    </div>
+
+    <div class="tab-panel" data-panel="members">
+      <div class="card">
+        <div class="b" style="margin-bottom:10px">➕ เพิ่มสมาชิกใหม่</div>
+        <form id="profileForm">
+          <input id="newProfileName" placeholder="ชื่อเล่น / ชื่อสมาชิก" maxlength="30">
+          <div class="avatar-pick" data-avatar-pick></div>
+          <button class="btn btn-primary btn-block" type="submit">เพิ่มสมาชิก</button>
+        </form>
+      </div>
+      <div class="card"><div class="b">รายชื่อสมาชิก</div><div id="memberList"></div></div>
+    </div>
+
+    <div class="tab-panel hidden" data-panel="shared">
+      <button class="btn btn-primary btn-block" data-action="add-shared" style="margin-bottom:14px">📢 ประกาศงานให้ทุกคน</button>
+      <div class="card"><div class="b">งานที่ประกาศแล้ว</div><div id="sharedList"></div></div>
+    </div>
+
+    <div class="tab-panel hidden" data-panel="news">
+      <div class="card">
+        <form id="announceForm">
+          <textarea id="announceText" placeholder="เช่น พรุ่งนี้สอบย่อยคณิต บทที่ 3 อย่าลืมเอาเครื่องคิดเลขมานะ!" maxlength="500"></textarea>
+          <button class="btn btn-primary btn-block" type="submit" style="margin-top:10px">โพสต์ประกาศ</button>
+        </form>
+      </div>
+      <div class="card"><div class="b">ประกาศทั้งหมด</div><div id="announceList"></div></div>
+    </div>
+
+    <div class="tab-panel hidden" data-panel="settings">
+      <div class="card">
+        <div class="b" style="margin-bottom:6px">💾 สำรอง / กู้คืนข้อมูล</div>
+        <p class="muted" style="font-size:13.5px;margin-bottom:10px">กด "สร้างข้อมูลสำรอง" แล้วคัดลอกข้อความไปเก็บไว้ เมื่ออยากกู้คืน ให้วางข้อความลงช่องนี้แล้วกด "กู้คืนข้อมูล"</p>
+        <textarea id="backupText" placeholder="ข้อความสำรองข้อมูลจะแสดงที่นี่ / วางข้อความที่เคยสำรองไว้เพื่อกู้คืน" spellcheck="false"></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn btn-primary grow" data-action="export-data">📤 สร้างข้อมูลสำรอง</button>
+          <button class="btn btn-ghost grow" data-action="import-data">📥 กู้คืนข้อมูล</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="b" style="margin-bottom:10px">🔑 เปลี่ยนรหัสผ่านแอดมิน</div>
+        <form id="passForm" class="row-form">
+          <input type="password" id="newPass" placeholder="รหัสผ่านใหม่ (อย่างน้อย 4 ตัว)">
+          <button class="btn btn-primary" type="submit">บันทึก</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="b" style="margin-bottom:6px">🗑️ ล้างข้อมูลทั้งหมด</div>
+        <p class="muted" style="font-size:13.5px;margin-bottom:10px">ลบสมาชิก งาน และประกาศทั้งหมด (กู้คืนไม่ได้)</p>
+        <button class="btn btn-danger btn-block" data-action="reset-all">ล้างข้อมูลทั้งหมด</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Modal: สร้างโปรไฟล์ ========== -->
+<div class="modal" id="profileModal">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-head"><h3>👋 สร้างโปรไฟล์ใหม่</h3><button class="mini" data-action="close-modal">✖</button></div>
+    <form id="quickProfileForm">
+      <div class="field"><label>ชื่อเล่น</label><input id="quickProfileName" placeholder="เช่น มายด์, ต้น, ฟ้า" maxlength="30"></div>
+      <label class="b" style="font-size:14px">เลือกอวาตาร์</label>
+      <div class="avatar-pick" data-avatar-pick></div>
+      <button class="btn btn-primary btn-block" type="submit">สร้างและเข้าใช้งาน</button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== Modal: เพิ่ม/แก้ไขงาน ========== -->
+<div class="modal" id="taskModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="taskModalTitle">เพิ่มงานใหม่</h3><button class="mini" data-action="close-modal">✖</button></div>
+    <form id="taskForm">
+      <input type="hidden" id="taskId">
+      <input type="hidden" id="fPrio" value="medium">
+      <div class="field"><label>ชื่องาน *</label><input id="fTitle" placeholder="เช่น แบบฝึกหัดบทที่ 2 ข้อ 1-10" maxlength="100"></div>
+      <div class="two-col">
+        <div class="field"><label>วิชา *</label><input id="fSubject" list="subjectList" placeholder="เลือก/พิมพ์วิชา" maxlength="40"><datalist id="subjectList"></datalist></div>
+        <div class="field"><label>วันส่ง</label><input type="date" id="fDue"></div>
+      </div>
+      <div class="field">
+        <label>ระดับความสำคัญ</label>
+        <div class="prio-pick">
+          <button type="button" data-action="pick-prio" data-p="high">🔴 ด่วน</button>
+          <button type="button" data-action="pick-prio" data-p="medium">🟡 กลาง</button>
+          <button type="button" data-action="pick-prio" data-p="low">🟢 ต่ำ</button>
+        </div>
+      </div>
+      <div class="field"><label>ลิงก์ประกอบงาน (ถ้ามี)</label><input type="url" id="fLink" placeholder="https://docs.google.com/..."></div>
+      <div class="field"><label>หมายเหตุ</label><textarea id="fNote" placeholder="รายละเอียดเพิ่มเติม เช่น ส่งในกูเกิลคลาสรูม, ทำเป็นกลุ่ม 4 คน" maxlength="500"></textarea></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" data-action="close-modal">ยกเลิก</button>
+        <button type="submit" class="btn btn-primary">💾 บันทึก</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ========== Modal: Login แอดมิน ========== -->
+<div class="modal" id="loginModal">
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-head"><h3>🔐 เข้าสู่ระบบแอดมิน</h3><button class="mini" data-action="close-modal">✖</button></div>
+    <form id="loginForm">
+      <div class="field"><input type="password" id="adminPassInput" placeholder="กรอกรหัสผ่าน" autocomplete="off"></div>
+      <p class="muted" style="font-size:13px;margin-bottom:12px" id="defaultPassHint">รหัสผ่านเริ่มต้น: 1234 (แนะนำให้เปลี่ยนในเมนูตั้งค่า)</p>
+      <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== Modal: แชร์ LINE ========== -->
+<div class="modal" id="shareModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>💬 แชร์สรุปงานไป LINE</h3><button class="mini" data-action="close-modal">✖</button></div>
+    <textarea id="shareText" style="min-height:220px;font-size:14px"></textarea>
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn btn-ghost" data-action="copy-share">📋 คัดลอก</button>
+      <button class="btn btn-line" data-action="line-share">ส่งใน LINE</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Modal: ยืนยัน ========== -->
+<div class="modal" id="confirmModal">
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-head"><h3>⚠️ ยืนยันการทำรายการ</h3></div>
+    <p id="confirmText" style="margin-bottom:16px;white-space:pre-wrap;word-break:break-word"></p>
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" data-action="confirm-no">ยกเลิก</button>
+      <button type="button" class="btn btn-danger" data-action="confirm-yes">ยืนยัน</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ================== CONFIG ==================
+const STORAGE_KEY = 'pkstudent_data_v1';
+const AVATARS = ['🐱','🐶','🐼','🦊','🐰','🐻','🐨','🐯','🦁','🐸','🐵','🦄','🐧','🐹','🐙','🦖'];
+const DEFAULT_SUBJECTS = ['คณิตศาสตร์','วิทยาศาสตร์','ภาษาไทย','ภาษาอังกฤษ','สังคมศึกษา','ประวัติศาสตร์','ฟิสิกส์','เคมี','ชีววิทยา','คอมพิวเตอร์','ศิลปะ','สุขศึกษา/พละ','การงานอาชีพ'];
+const PRIORITY = {
+  high:{label:'ด่วน',icon:'🔴',rank:0},
+  medium:{label:'กลาง',icon:'🟡',rank:1},
+  low:{label:'ต่ำ',icon:'🟢',rank:2}
+};
+const QUOTES = [
+  'ความสำเร็จไม่ได้มาจากโชค แต่มาจากการลงมือทำทุกวัน',
+  'งานที่ยากที่สุด คือการเริ่มต้น — เริ่มเลยตอนนี้!',
+  'ทีละนิด ทีละหน่อย สุดท้ายก็ทำเสร็จได้',
+  'เหนื่อยก็พัก แต่อย่าเลิก 💪',
+  'อนาคตของเรา ถูกสร้างจากสิ่งที่เราทำวันนี้',
+  'ไม่ต้องสมบูรณ์แบบ แค่ทำให้ดีกว่าเมื่อวาน',
+  'การบ้านวันนี้ คือคะแนนสอบวันหน้า',
+  'อย่ารอให้มีแรงบันดาลใจ ลงมือทำแล้วแรงบันดาลใจจะตามมา',
+  'Done is better than perfect — ทำให้เสร็จดีกว่าทำให้เพอร์เฟกต์',
+  'เพื่อนที่ดี คือเพื่อนที่ชวนกันทำการบ้าน 😆',
+  'ความพยายามไม่เคยทรยศใคร',
+  'ทุกงานที่ติ๊กเสร็จ คือก้าวเล็ก ๆ สู่เป้าหมายใหญ่'
+];
+
+// ================== SAFE STORAGE ==================
+const store = (() => {
+  const mem = {};
+  try {
+    const k = '__pkstudent_test__';
+    localStorage.setItem(k, '1'); localStorage.removeItem(k);
+    return { ok:true, get:key => localStorage.getItem(key), set:(key,val) => localStorage.setItem(key,val) };
+  } catch(e) {
+    return { ok:false, get:key => (key in mem ? mem[key] : null), set:(key,val) => { mem[key] = val; } };
+  }
+})();
+
+// ================== STATE ==================
+function defaultState(){ return { profiles:[], tasks:[], announcements:[], adminPass:'1234', theme:'light' }; }
+function loadState(){
+  try {
+    const d = JSON.parse(store.get(STORAGE_KEY));
+    if(!d || typeof d !== 'object') return defaultState();
+    const s = { ...defaultState(), ...d };
+    s.profiles = Array.isArray(s.profiles) ? s.profiles : [];
+    s.tasks = (Array.isArray(s.tasks) ? s.tasks : []).map(t => ({
+      ...t, doneBy: Array.isArray(t.doneBy) ? t.doneBy : [], priority: PRIORITY[t.priority] ? t.priority : 'medium'
+    }));
+    s.announcements = Array.isArray(s.announcements) ? s.announcements : [];
+    return s;
+  } catch(e) { return defaultState(); }
+}
+let state = loadState();
+let currentUser = null;
+let filter = { search:'', subject:'all', status:'all' };
+let editingOwner = null;
+let selectedAvatar = AVATARS[0];
+let confirmResolve = null;
+let calDate = new Date();
+let selectedCalDateStr = null;
+
+function save(){
+  try { store.set(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e) { toast('บันทึกข้อมูลไม่สำเร็จ: ' + e.message, 'error'); }
+}
+
+// ================== HELPERS ==================
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const normPass = s => String(s || '').replace(/[๐-๙]/g, c => '๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).trim();
+function todayStr(){ const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+function daysUntil(due){
+  if(!due) return null;
+  return Math.round((new Date(due+'T00:00:00') - new Date(todayStr()+'T00:00:00')) / 86400000);
+}
+const fmtDate = due => new Date(due+'T00:00:00').toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
+function dueLabel(t, done){
+  if(!t.due) return '';
+  const n = daysUntil(t.due); let cls = '', txt;
+  if(done) txt = '📅 ' + fmtDate(t.due);
+  else if(n < 0){ cls='overdue'; txt=`⚠️ เลยกำหนด ${-n} วัน (${fmtDate(t.due)})`; }
+  else if(n === 0){ cls='today'; txt='⏰ ส่งวันนี้!'; }
+  else if(n === 1){ cls='soon'; txt='⏰ ส่งพรุ่งนี้'; }
+  else { txt=`📅 ${fmtDate(t.due)} (อีก ${n} วัน)`; if(n <= 3) cls='soon'; }
+  return `<span class="due ${cls}">${txt}</span>`;
+}
+const userTasks = id => state.tasks.filter(t => t.owner === id || t.owner === 'all');
+const isDone = (t, id) => t.doneBy.includes(id);
+const isOverdue = (t, id) => !isDone(t,id) && t.due && daysUntil(t.due) < 0;
+function userStats(id){
+  const ts = userTasks(id);
+  const done = ts.filter(t => isDone(t,id)).length;
+  return {
+    total: ts.length, done, pending: ts.length - done,
+    overdue: ts.filter(t => isOverdue(t,id)).length,
+    urgent: ts.filter(t => !isDone(t,id) && t.priority === 'high').length,
+    pct: ts.length ? Math.round(done / ts.length * 100) : 0
+  };
+}
+
+// ================== UI CORE ==================
+function toast(msg, type='success'){
+  const box = $('#toastBox'); if(!box) return;
+  const el = document.createElement('div');
+  el.className = 'toast ' + type; el.textContent = msg;
+  box.appendChild(el);
+  setTimeout(() => { el.classList.add('hide'); setTimeout(() => el.remove(), 300); }, type === 'error' ? 4500 : 2600);
+}
+function applyTheme(){
+  document.documentElement.dataset.theme = state.theme;
+  $$('.theme-toggle').forEach(b => {
+    if(b.querySelector('.icon')) b.querySelector('.icon').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+    else b.textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  });
+}
+function toggleTheme(){ state.theme = state.theme === 'dark' ? 'light' : 'dark'; save(); applyTheme(); }
+function show(id){ ['profileScreen','appScreen','adminScreen'].forEach(s => $('#'+s).classList.toggle('hidden', s !== id)); window.scrollTo(0,0); }
+function openModal(id){ $('#'+id).classList.add('open'); }
+function closeModal(id){
+  $('#'+id).classList.remove('open');
+  if(id === 'confirmModal' && confirmResolve){ const r = confirmResolve; confirmResolve = null; r(false); }
+}
+function askConfirm(msg){
+  if(confirmResolve){ const r = confirmResolve; confirmResolve = null; r(false); }
+  $('#confirmText').textContent = msg;
+  openModal('confirmModal');
+  return new Promise(res => { confirmResolve = res; });
+}
+function answerConfirm(v){
+  const r = confirmResolve; confirmResolve = null;
+  $('#confirmModal').classList.remove('open');
+  if(r) r(v);
+}
+function refresh(){
+  if(!$('#adminScreen').classList.contains('hidden')) renderAdmin();
+  else if(currentUser) renderApp();
+  else renderProfiles();
+}
+function celebrate(el){
+  if(typeof confetti !== 'function') return;
+  const r = el.getBoundingClientRect();
+  confetti({ particleCount:70, spread:75, startVelocity:30,
+    origin:{ x:(r.left+r.width/2)/innerWidth, y:(r.top+r.height/2)/innerHeight },
+    colors:['#6366f1','#ec4899','#10b981','#f59e0b'] });
+}
+function bigCelebrate(){
+  if(typeof confetti !== 'function') return;
+  const end = Date.now() + 1200;
+  (function frame(){
+    confetti({ particleCount:5, angle:60, spread:60, origin:{x:0} });
+    confetti({ particleCount:5, angle:120, spread:60, origin:{x:1} });
+    if(Date.now() < end) requestAnimationFrame(frame);
+  })();
+}
+
+// ================== PROFILES ==================
+function renderAvatarPick(){
+  const html = AVATARS.map(a =>
+    `<button type="button" class="${a === selectedAvatar ? 'sel' : ''}" data-action="pick-avatar" data-avatar="${a}">${a}</button>`).join('');
+  $$('[data-avatar-pick]').forEach(el => el.innerHTML = html);
+}
+function addProfile(name){
+  name = String(name || '').trim();
+  if(!name){ toast('กรุณากรอกชื่อ','error'); return null; }
+  if(state.profiles.some(p => p.name === name)){ toast('มีชื่อนี้อยู่แล้ว','error'); return null; }
+  const p = { id: uid(), name, avatar: selectedAvatar };
+  state.profiles.push(p); save();
+  selectedAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+  return p;
+}
+function renderProfiles(){
+  const addCard = `<button class="profile-card add" data-action="open-new-profile">
+      <div class="avatar">➕</div><div class="pname">เพิ่มโปรไฟล์</div><div class="psub">สร้างโปรไฟล์ใหม่</div>
+    </button>`;
+  const cards = state.profiles.map(p => {
+    const s = userStats(p.id);
+    return `<button class="profile-card" data-action="pick-profile" data-id="${p.id}">
+      <div class="avatar">${p.avatar}</div>
+      <div class="pname">${esc(p.name)}</div>
+      <div class="psub">${s.pending ? `ค้าง ${s.pending} งาน` : 'ไม่มีงานค้าง ✨'}</div>
+    </button>`;
+  }).join('');
+  $('#profileGrid').innerHTML = cards + addCard;
+}
+function openNewProfile(){
+  $('#quickProfileName').value = '';
+  renderAvatarPick();
+  openModal('profileModal');
+  setTimeout(() => $('#quickProfileName').focus(), 250);
+}
+$('#quickProfileForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const p = addProfile($('#quickProfileName').value);
+  if(!p) return;
+  closeModal('profileModal');
+  loginAs(p.id);
+});
+function loginAs(id){
+  currentUser = state.profiles.find(p => p.id === id);
+  if(!currentUser){ toast('ไม่พบโปรไฟล์นี้','error'); renderProfiles(); return; }
+  filter = { search:'', subject:'all', status:'all' };
+  $('#searchInput').value = '';
+  show('appScreen'); renderApp(); showQuote();
+  toast(`ยินดีต้อนรับ ${currentUser.name} 👋`, 'info');
+}
+function logout(){ currentUser = null; renderProfiles(); show('profileScreen'); }
+
+// ================== CALENDAR VIEW ==================
+function switchMainView(view){
+  const isCal = view === 'calendar';
+  $('#tasksSection').classList.toggle('hidden', isCal);
+  $('#calendarSection').classList.toggle('hidden', !isCal);
+  $('#viewTasksBtn').classList.toggle('active', !isCal);
+  $('#viewCalBtn').classList.toggle('active', isCal);
+  if($('#navTasks')) $('#navTasks').classList.toggle('active', !isCal);
+  if($('#navCal')) $('#navCal').classList.toggle('active', isCal);
+  if(isCal) renderCalendar();
+}
+
+function changeCalMonth(delta){
+  calDate.setMonth(calDate.getMonth() + delta);
+  renderCalendar();
+}
+
+function renderCalendar(){
+  if(!currentUser) return;
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+  $('#calMonthTitle').textContent = calDate.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  const userTs = userTasks(currentUser.id);
+  let html = '';
+
+  for(let i = firstDay - 1; i >= 0; i--){
+    html += `<div class="cal-cell other-month"><span style="opacity:0.5">${prevMonthDays - i}</span></div>`;
+  }
+
+  const today = todayStr();
+
+  for(let day = 1; day <= daysInMonth; day++){
+    const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dayTasks = userTs.filter(t => t.due === dStr && !isDone(t, currentUser.id));
+    const isToday = dStr === today;
+    const isSel = dStr === selectedCalDateStr;
+
+    let dotsHtml = '';
+    if(dayTasks.length > 0){
+      dotsHtml = `<div class="cal-dots">` + dayTasks.slice(0,3).map(t => `<div class="cal-dot ${t.priority}"></div>`).join('') + `</div>`;
+    }
+
+    html += `<div class="cal-cell ${isToday ? 'today' : ''} ${isSel ? 'selected' : ''}" onclick="selectCalDate('${dStr}')">
+      <span>${day}</span>
+      ${dotsHtml}
+    </div>`;
+  }
+
+  $('#calCells').innerHTML = html;
+  if(selectedCalDateStr) renderCalDayTasks(selectedCalDateStr);
+}
+
+function selectCalDate(dStr){
+  selectedCalDateStr = dStr;
+  renderCalendar();
+}
+
+function renderCalDayTasks(dStr){
+  const userTs = userTasks(currentUser.id).filter(t => t.due === dStr);
+  const container = $('#calDayTaskList');
+  if(!userTs.length){
+    container.innerHTML = `<div class="empty">📅 ไม่มีงานที่ต้องส่งในวันที่ ${fmtDate(dStr)}</div>`;
+    return;
+  }
+  container.innerHTML = `<div class="b" style="margin-bottom:8px;">📌 งานที่ต้องส่งวันที่ ${fmtDate(dStr)} (${userTs.length} รายการ)</div>` +
+    userTs.map(t => {
+      const d = isDone(t, currentUser.id);
+      return `<div class="task p-${t.priority} ${d ? 'done' : ''}" style="margin-bottom:8px;">
+        <button class="check ${d ? 'checked' : ''}" data-action="toggle" data-id="${t.id}">✓</button>
+        <div class="task-body">
+          <div class="task-top"><span class="tag subject">${esc(t.subject)}</span></div>
+          <div class="task-title">${esc(t.title)}</div>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+// ================== APP SCREEN ==================
+function renderApp(){
+  if(!currentUser) return;
+  renderDueAlert();
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'อรุณสวัสดิ์' : h < 17 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น';
+  $('#userAvatar').textContent = currentUser.avatar;
+  $('#userGreeting').textContent = `${greet}, ${currentUser.name}`;
+  $('#todayText').textContent = new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderStats(); renderAnnouncements(); renderSubjectFilter(); renderStatusChips(); renderTasks();
+  if(!$('#calendarSection').classList.contains('hidden')) renderCalendar();
+}
+function renderStats(){
+  const s = userStats(currentUser.id);
+  $('#pctText').textContent = s.pct + '%';
+  $('#progressFill').style.width = s.pct + '%';
+  $('#progressSub').textContent = `ทำเสร็จแล้ว ${s.done} จาก ${s.total} งาน`;
+  $('#progressMsg').textContent =
+    s.total === 0 ? 'เพิ่มงานแรกกันเลย ✍️' :
+    s.pct === 100 ? 'เคลียร์หมดแล้ว สุดยอด! 🏆' :
+    s.pct >= 70 ? 'ใกล้เสร็จแล้ว สู้ ๆ 🔥' :
+    s.pct >= 40 ? 'มาได้ครึ่งทางแล้ว 💪' : 'ค่อย ๆ ทำไปทีละงาน 🌱';
+  $('#statPending').textContent = s.pending;
+  $('#statOverdue').textContent = s.overdue;
+  $('#statUrgent').textContent = s.urgent;
+}
+function showQuote(){
+  const el = $('#quoteText'); let q;
+  do { q = QUOTES[Math.floor(Math.random() * QUOTES.length)]; } while(`"${q}"` === el.textContent && QUOTES.length > 1);
+  el.textContent = `"${q}"`;
+}
+function renderAnnouncements(){
+  const list = [...state.announcements].sort((a,b) => b.date - a.date).slice(0,3);
+  $('#announceCard').classList.toggle('hidden', !list.length);
+  $('#announceBox').innerHTML = list.map(a =>
+    `<div class="announce-item">${esc(a.text)}<small>🕒 ${new Date(a.date).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</small></div>`
+  ).join('');
+}
+function renderSubjectFilter(){
+  const subjects = [...new Set(userTasks(currentUser.id).map(t => t.subject))].sort((a,b) => a.localeCompare(b,'th'));
+  if(filter.subject !== 'all' && !subjects.includes(filter.subject)) filter.subject = 'all';
+  $('#subjectFilter').innerHTML = `<option value="all">📚 ทุกวิชา</option>` +
+    subjects.map(s => `<option value="${esc(s)}" ${s === filter.subject ? 'selected' : ''}>${esc(s)}</option>`).join('');
+}
+function renderStatusChips(){
+  $$('#statusChips .chip').forEach(c => c.classList.toggle('active', c.dataset.status === filter.status));
+}
+function renderTasks(){
+  const id = currentUser.id;
+  const q = filter.search.toLowerCase();
+  let ts = userTasks(id).filter(t => {
+    const d = isDone(t,id);
+    if(filter.subject !== 'all' && t.subject !== filter.subject) return false;
+    if(filter.status === 'pending' && d) return false;
+    if(filter.status === 'done' && !d) return false;
+    if(filter.status === 'overdue' && !isOverdue(t,id)) return false;
+    if(q && !(`${t.title} ${t.subject} ${t.note || ''}`).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  ts.sort((a,b) => {
+    const da = isDone(a,id), db = isDone(b,id);
+    if(da !== db) return da ? 1 : -1;
+    const pr = PRIORITY[a.priority].rank - PRIORITY[b.priority].rank;
+    if(pr) return pr;
+    return (a.due || '9999').localeCompare(b.due || '9999');
+  });
+  $('#taskCount').textContent = `${ts.length} รายการ`;
+  if(!ts.length){
+    const noTask = !userTasks(id).length;
+    $('#taskList').innerHTML = `<div class="empty">${noTask ? '🎈 ยังไม่มีงานเลย<br>กดปุ่ม <b>+</b> มุมขวาล่างเพื่อเพิ่มงานแรก' : '🔍 ไม่พบงานที่ตรงกับตัวกรอง'}</div>`;
+    return;
+  }
+  $('#taskList').innerHTML = ts.map(t => {
+    const d = isDone(t,id), P = PRIORITY[t.priority];
+    return `<div class="task p-${t.priority} ${d ? 'done' : ''}">
+      <button class="check ${d ? 'checked' : ''}" data-action="toggle" data-id="${t.id}" title="ทำเสร็จแล้ว">✓</button>
+      <div class="task-body">
+        <div class="task-top">
+          <span class="tag subject">${esc(t.subject)}</span>
+          <span class="tag ${t.priority}">${P.icon} ${P.label}</span>
+          ${t.owner === 'all' ? '<span class="tag shared">📢 งานจากแอดมิน</span>' : ''}
+        </div>
+        <div class="task-title">${esc(t.title)}</div>
+        ${t.note ? `<div class="task-note">📝 ${esc(t.note)}</div>` : ''}
+        ${t.link ? `<a href="${esc(t.link)}" target="_blank" rel="noopener" class="task-link">🔗 เปิดลิงก์งาน</a>` : ''}
+        ${dueLabel(t,d)}
+      </div>
+      ${t.owner !== 'all' ? `<div class="task-actions">
+        <button class="mini" data-action="edit" data-id="${t.id}" title="แก้ไข">✏️</button>
+        <button class="mini" data-action="delete" data-id="${t.id}" title="ลบ">🗑️</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+function toggleTask(id, btn){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t || !currentUser) return;
+  const u = currentUser.id, i = t.doneBy.indexOf(u);
+  if(i > -1){
+    t.doneBy.splice(i,1); save(); renderApp();
+    toast('↩️ ย้ายกลับไปเป็นงานค้างแล้ว','info'); return;
+  }
+  t.doneBy.push(u); save();
+  btn.classList.add('checked');
+  btn.closest('.task').classList.add('done','pop');
+  celebrate(btn);
+  const s = userStats(u);
+  if(s.pending === 0){ bigCelebrate(); toast('🎉 เคลียร์งานครบทุกงานแล้ว เก่งมาก!'); }
+  else toast(`✅ เยี่ยม! เหลืออีก ${s.pending} งาน`);
+  setTimeout(renderApp, 550);
+}
+
+// ================== TASK MODAL ==================
+function setPrio(p){
+  $('#fPrio').value = p;
+  $$('.prio-pick button').forEach(b => b.classList.toggle('sel', b.dataset.p === p));
+}
+function renderSubjectList(){
+  const all = [...new Set([...DEFAULT_SUBJECTS, ...state.tasks.map(t => t.subject)])];
+  $('#subjectList').innerHTML = all.map(s => `<option value="${esc(s)}">`).join('');
+}
+function openTaskModal(task, owner){
+  if(!task && !owner){ toast('กรุณาเลือกโปรไฟล์ก่อน','error'); return; }
+  $('#taskForm').reset();
+  $('#taskId').value = task ? task.id : '';
+  editingOwner = task ? task.owner : owner;
+  $('#taskModalTitle').textContent = task ? '✏️ แก้ไขงาน' : (editingOwner === 'all' ? '📢 ประกาศงานให้ทุกคน' : '➕ เพิ่มงานใหม่');
+  $('#fTitle').value = task?.title || '';
+  $('#fSubject').value = task?.subject || '';
+  $('#fDue').value = task?.due || '';
+  $('#fLink').value = task?.link || '';
+  $('#fNote').value = task?.note || '';
+  setPrio(task?.priority || 'medium');
+  renderSubjectList();
+  openModal('taskModal');
+  setTimeout(() => $('#fTitle').focus(), 250);
+}
+$('#taskForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const title = $('#fTitle').value.trim(), subject = $('#fSubject').value.trim();
+  if(!title || !subject){ toast('กรุณากรอกชื่องานและวิชา','error'); return; }
+  const data = { title, subject, due: $('#fDue').value, priority: $('#fPrio').value, link: $('#fLink').value.trim(), note: $('#fNote').value.trim() };
+  const id = $('#taskId').value;
+  if(id){
+    const t = state.tasks.find(x => x.id === id);
+    if(t) Object.assign(t, data);
+    toast('💾 บันทึกการแก้ไขแล้ว');
+  } else {
+    state.tasks.push({ id: uid(), ...data, owner: editingOwner, doneBy: [], createdAt: Date.now() });
+    toast(editingOwner === 'all' ? '📢 ประกาศงานให้ทุกคนแล้ว' : '✨ เพิ่มงานใหม่แล้ว');
+  }
+  save(); closeModal('taskModal'); refresh();
+});
+async function deleteTask(id){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t) return;
+  if(!(await askConfirm(`ลบงาน "${t.title}" ใช่ไหม?`))) return;
+  state.tasks = state.tasks.filter(x => x.id !== id);
+  save(); refresh(); toast('🗑️ ลบงานแล้ว','info');
+}
+
+// ================== SHARE (LINE) ==================
+function buildShareText(){
+  const id = currentUser.id, s = userStats(id);
+  const pend = userTasks(id).filter(t => !isDone(t,id)).sort((a,b) => (a.due || '9999').localeCompare(b.due || '9999'));
+  let txt = `📚 สรุปงานจาก pk STUDENT\n👤 ${currentUser.name}\n🗓️ ${new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}\n\n`;
+  txt += `✅ ความคืบหน้า: ${s.done}/${s.total} งาน (${s.pct}%)\n⏳ งานค้าง: ${s.pending} งาน${s.overdue ? ` (เลยกำหนด ${s.overdue} งาน)` : ''}\n`;
+  if(pend.length){
+    txt += `\n📌 รายการงานที่ต้องทำ\n`;
+    pend.forEach((t,i) => {
+      let due = '';
+      if(t.due){ const n = daysUntil(t.due); due = n < 0 ? ` ⚠️เลยกำหนด ${-n} วัน` : n === 0 ? ' ⏰ส่งวันนี้' : n === 1 ? ' ⏰ส่งพรุ่งนี้' : ` 📅ส่ง ${fmtDate(t.due)}`; }
+      txt += `${i+1}. ${PRIORITY[t.priority].icon} [${t.subject}] ${t.title}${due}\n`;
+    });
+  } else txt += `\n🎉 ไม่มีงานค้างแล้ว เคลียร์หมด!\n`;
+  return txt + `\n💪 สู้ ๆ นะทุกคน!`;
+}
+function openShare(){ if(!currentUser) return; $('#shareText').value = buildShareText(); openModal('shareModal'); }
+async function copyShare(){
+  const txt = $('#shareText').value;
+  try { await navigator.clipboard.writeText(txt); }
+  catch(e){ $('#shareText').select(); try { document.execCommand('copy'); } catch(_){} }
+  toast('📋 คัดลอกแล้ว นำไปวางใน LINE ได้เลย');
+}
+function lineShare(){ window.open('https://line.me/R/msg/text/?' + encodeURIComponent($('#shareText').value), '_blank'); }
+
+// ================== ADMIN ==================
+function openAdminLogin(){
+  $('#adminPassInput').value = '';
+  $('#defaultPassHint').classList.toggle('hidden', state.adminPass !== '1234');
+  openModal('loginModal');
+  setTimeout(() => $('#adminPassInput').focus(), 250);
+}
+$('#loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const input = $('#adminPassInput');
+  if(normPass(input.value) === normPass(state.adminPass)){
+    input.value = ''; closeModal('loginModal');
+    show('adminScreen'); switchTab('members'); renderAdmin();
+    toast('🛡️ เข้าสู่ระบบแอดมินแล้ว','info');
+  } else {
+    const box = $('#loginModal .modal-box');
+    box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+    toast('รหัสผ่านไม่ถูกต้อง','error'); input.select();
+  }
+});
+function exitAdmin(){ renderProfiles(); show('profileScreen'); }
+function switchTab(tab){
+  $$('.tabs .chip').forEach(c => c.classList.toggle('active', c.dataset.tab === tab));
+  $$('.tab-panel').forEach(p => p.classList.toggle('hidden', p.dataset.panel !== tab));
+}
+function renderAdmin(){
+  renderAvatarPick();
+  $('#memberList').innerHTML = state.profiles.length ? state.profiles.map(p => {
+    const s = userStats(p.id);
+    return `<div class="list-row">
+      <div class="avatar sm">${p.avatar}</div>
+      <div class="grow"><div class="b">${esc(p.name)}</div>
+        <small class="muted">เสร็จ ${s.done}/${s.total} · ค้าง ${s.pending}${s.overdue ? ` · เลยกำหนด ${s.overdue}` : ''}</small></div>
+      <button class="mini" data-action="del-profile" data-id="${p.id}" title="ลบสมาชิก">🗑️</button>
+    </div>`;
+  }).join('') : '<div class="empty">ยังไม่มีสมาชิก</div>';
+
+  const n = state.profiles.length;
+  const shared = state.tasks.filter(t => t.owner === 'all').sort((a,b) => (a.due || '9999').localeCompare(b.due || '9999'));
+  $('#sharedList').innerHTML = shared.length ? shared.map(t => {
+    const c = t.doneBy.filter(id => state.profiles.some(p => p.id === id)).length;
+    const pct = n ? Math.round(c / n * 100) : 0;
+    return `<div class="list-row">
+      <div class="grow">
+        <div class="task-top"><span class="tag subject">${esc(t.subject)}</span><span class="tag ${t.priority}">${PRIORITY[t.priority].icon} ${PRIORITY[t.priority].label}</span></div>
+        <div class="b">${esc(t.title)}</div>
+        ${dueLabel(t,false)}
+        <div class="mini-bar"><div style="width:${pct}%"></div></div>
+        <small class="muted">ทำเสร็จแล้ว ${c}/${n} คน</small>
+      </div>
+      <div class="task-actions">
+        <button class="mini" data-action="edit" data-id="${t.id}">✏️</button>
+        <button class="mini" data-action="delete" data-id="${t.id}">🗑️</button>
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty">ยังไม่มีงานที่ประกาศ</div>';
+
+  const anns = [...state.announcements].sort((a,b) => b.date - a.date);
+  $('#announceList').innerHTML = anns.length ? anns.map(a =>
+    `<div class="list-row"><div class="grow" style="white-space:pre-wrap;word-break:break-word">${esc(a.text)}
+      <small class="muted" style="display:block">🕒 ${new Date(a.date).toLocaleString('th-TH')}</small></div>
+      <button class="mini" data-action="del-announce" data-id="${a.id}">🗑️</button></div>`).join('')
+    : '<div class="empty">ยังไม่มีประกาศ</div>';
+}
+$('#profileForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const p = addProfile($('#newProfileName').value);
+  if(!p) return;
+  $('#newProfileName').value = '';
+  renderAdmin(); toast(`👋 เพิ่ม ${p.name} แล้ว`);
+});
+async function deleteProfile(id){
+  const p = state.profiles.find(x => x.id === id);
+  if(!p) return;
+  if(!(await askConfirm(`ลบสมาชิก "${p.name}" และงานส่วนตัวทั้งหมดของเขาใช่ไหม?`))) return;
+  state.profiles = state.profiles.filter(x => x.id !== id);
+  state.tasks = state.tasks.filter(t => t.owner !== id);
+  state.tasks.forEach(t => t.doneBy = t.doneBy.filter(u => u !== id));
+  save(); renderAdmin(); toast('🗑️ ลบสมาชิกแล้ว','info');
+}
+$('#announceForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const text = $('#announceText').value.trim();
+  if(!text){ toast('กรุณาพิมพ์ข้อความประกาศ','error'); return; }
+  state.announcements.push({ id: uid(), text, date: Date.now() });
+  save(); $('#announceText').value = ''; renderAdmin(); toast('📣 โพสต์ประกาศแล้ว');
+});
+async function deleteAnnounce(id){
+  if(!(await askConfirm('ลบประกาศนี้ใช่ไหม?'))) return;
+  state.announcements = state.announcements.filter(a => a.id !== id);
+  save(); renderAdmin(); toast('🗑️ ลบประกาศแล้ว','info');
+}
+$('#passForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const p = normPass($('#newPass').value);
+  if(p.length < 4){ toast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร','error'); return; }
+  state.adminPass = p; save(); $('#newPass').value = '';
+  toast('🔑 เปลี่ยนรหัสผ่านเรียบร้อย');
+});
+async function resetAll(){
+  if(!(await askConfirm('⚠️ ลบข้อมูลทั้งหมดใช่ไหม? การกระทำนี้กู้คืนไม่ได้'))) return;
+  if(!(await askConfirm('ยืนยันอีกครั้ง: ลบสมาชิก งาน และประกาศทั้งหมด?'))) return;
+  const theme = state.theme;
+  state = defaultState(); state.theme = theme; save();
+  currentUser = null; exitAdmin(); toast('ล้างข้อมูลทั้งหมดแล้ว','info');
+}
+
+// ================== DUE ALERT ==================
+function renderDueAlert(){
+  const box = $('#dueAlert'); if(!box || !currentUser) return;
+  const list = userTasks(currentUser.id)
+    .filter(t => !isDone(t, currentUser.id) && t.due && daysUntil(t.due) <= 1)
+    .sort((a,b) => a.due.localeCompare(b.due));
+  if(!list.length){ box.classList.add('hidden'); box.innerHTML = ''; return; }
+  box.classList.remove('hidden');
+  box.innerHTML = `<div class="b">🔔 งานที่ต้องรีบทำ (${list.length})</div>` + list.map(t => {
+    const n = daysUntil(t.due);
+    const tag = n < 0 ? `⚠️ เลยกำหนด ${-n} วัน` : n === 0 ? '⏰ ส่งวันนี้' : '⏰ ส่งพรุ่งนี้';
+    const color = n < 0 ? 'var(--high)' : 'var(--mid)';
+    return `<div class="due-row"><span>${esc(t.title)}${t.subject ? ' · ' + esc(t.subject) : ''}</span><span class="due-tag" style="color:${color}">${tag}</span></div>`;
+  }).join('');
+}
+
+// ================== BACKUP ==================
+function exportData(){
+  const { adminPass, ...rest } = state;
+  const txt = JSON.stringify({ app:'pk-student', version:1, data:rest });
+  const ta = $('#backupText'); ta.value = txt; ta.focus(); ta.select();
+  let copied = false;
+  try { copied = document.execCommand('copy'); } catch(e) {}
+  toast(copied ? '📋 คัดลอกข้อมูลสำรองแล้ว นำไปวางเก็บไว้ได้เลย' : 'สร้างข้อมูลสำรองแล้ว กรุณาคัดลอกข้อความในช่อง', 'info');
+}
+async function importData(){
+  const raw = $('#backupText').value.trim();
+  if(!raw){ toast('กรุณาวางข้อความสำรองข้อมูลในช่องก่อน', 'error'); return; }
+  let d;
+  try {
+    const obj = JSON.parse(raw);
+    d = obj && obj.data ? obj.data : obj;
+    if(!d || typeof d !== 'object' || !Array.isArray(d.profiles) || !Array.isArray(d.tasks)) throw new Error('bad');
+  } catch(e){ toast('ข้อมูลสำรองไม่ถูกต้อง ตรวจสอบว่าคัดลอกมาครบ', 'error'); return; }
+  if(!(await askConfirm(`กู้คืนข้อมูล (${d.profiles.length} สมาชิก, ${d.tasks.length} งาน) ข้อมูลปัจจุบันจะถูกแทนที่ ยืนยันไหม?`))) return;
+  const keep = { adminPass: state.adminPass, theme: state.theme };
+  store.set(STORAGE_KEY, JSON.stringify({ ...d, ...keep }));
+  state = loadState(); save();
+  currentUser = null; applyTheme(); exitAdmin();
+  toast('✅ กู้คืนข้อมูลเรียบร้อย');
+}
+
+// ================== PWA SERVICE WORKER REGISTER ==================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('activate', e => self.clients.claim());
+      self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+    `;
+    const blob = new Blob([swCode], { type: 'text/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+  });
+}
+
+// ================== EVENTS ==================
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+  const id = el.dataset.id;
+  const actions = {
+    'theme': toggleTheme,
+    'pick-profile': () => loginAs(id),
+    'open-new-profile': openNewProfile,
+    'open-admin-login': openAdminLogin,
+    'logout': logout,
+    'add-task': () => openTaskModal(null, currentUser && currentUser.id),
+    'add-shared': () => {
+      if(!state.profiles.length) toast('ยังไม่มีสมาชิก แต่ประกาศงานไว้ก่อนได้','info');
+      openTaskModal(null, 'all');
+    },
+    'toggle': () => toggleTask(id, el),
+    'edit': () => { const t = state.tasks.find(x => x.id === id); if(t) openTaskModal(t); },
+    'delete': () => deleteTask(id),
+    'share': openShare,
+    'copy-share': copyShare,
+    'line-share': lineShare,
+    'new-quote': showQuote,
+    'close-modal': () => closeModal(el.closest('.modal').id),
+    'confirm-yes': () => answerConfirm(true),
+    'confirm-no': () => answerConfirm(false),
+    'tab': () => switchTab(el.dataset.tab),
+    'status': () => { filter.status = el.dataset.status; renderStatusChips(); renderTasks(); },
+    'pick-avatar': () => { selectedAvatar = el.dataset.avatar; renderAvatarPick(); },
+    'pick-prio': () => setPrio(el.dataset.p),
+    'del-profile': () => deleteProfile(id),
+    'del-announce': () => deleteAnnounce(id),
+    'export-data': exportData,
+    'import-data': importData,
+    'reset-all': resetAll,
+    'exit-admin': exitAdmin
+  };
+  const fn = actions[el.dataset.action];
+  if(fn){
+    try { fn(); }
+    catch(err){ console.error(err); toast('เกิดข้อผิดพลาด: ' + err.message, 'error'); }
+  }
+});
+$$('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeModal(m.id); }));
+document.addEventListener('keydown', e => { if(e.key === 'Escape') $$('.modal.open').forEach(m => closeModal(m.id)); });
+$('#searchInput').addEventListener('input', e => { filter.search = e.target.value.trim(); renderTasks(); });
+$('#subjectFilter').addEventListener('change', e => { filter.subject = e.target.value; renderTasks(); });
+window.addEventListener('error', e => toast('เกิดข้อผิดพลาด: ' + (e.message || 'ไม่ทราบสาเหตุ'), 'error'));
+window.addEventListener('unhandledrejection', e => toast('เกิดข้อผิดพลาด: ' + (e.reason?.message || e.reason || 'ไม่ทราบสาเหตุ'), 'error'));
+
+// ================== INIT ==================
+applyTheme();
+renderAvatarPick();
+renderProfiles();
+show('profileScreen');
+if(!store.ok){
+  setTimeout(() => toast('⚠️ เบราว์เซอร์นี้บล็อกการบันทึกข้อมูล ข้อมูลจะหายเมื่อปิดหน้า แนะนำให้บันทึกเป็นไฟล์ .html แล้วเปิดด้วย Chrome','error'), 400);
+}
+</script>
+</body>
+</html>
